@@ -9,6 +9,8 @@ The purpose of this library is to allow the execution of strings as code in a se
 $ TODO: add to npm
 ```
 
+## Compatibility
+
 ## Usage
 
 ```js
@@ -45,21 +47,17 @@ const result = expression({prop1: 'someValue', prop2: 'someOtherValue'}, ['Local
 
 ```js
 const compiler = require('nx-compile')
+
 const code = compiler.compileCode('console.log(name + version)')
 
-const sandbox = {
-  name: 'nx-compile',
-  version: '1.0'
-}
-
 // outputs 'nx-compile1.0' to console
-code(sandbox, ['console'])
+code({name: 'nx-compile', version: '1.0'}, ['console'])
 
 // outputs '1.0' to console (name is undefined)
 code({version: '1.0'}, ['console'])
 
 // throws an error (console is undefined)
-code(sandbox)
+code({name: 'nx-compile', version: '1.0'})
 ```
 
 ## Authors

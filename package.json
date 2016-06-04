@@ -1,0 +1,40 @@
+{
+  "name": "@risingstack/nx-compile",
+  "version": "1.0.0",
+  "description": "String compilation to code and sandboxed execution",
+  "main": "compiler.js",
+  "scripts": {
+    "test": "mocha compiler.test.js",
+    "lint": "standard compiler.js"
+  },
+  "author": "Miklos Bertalan",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:RisingStack/nx-compile.git"
+  },
+  "bugs": {
+    "url": "https://github.com/RisingStack/nx-compile/issues"
+  },
+  "homepage": "https://github.com/RisingStack/nx-compile#readme",
+  "license": "MIT",
+  "keywords": [
+    "nx",
+    "compile",
+    "sandbox",
+    "eval",
+    "execution"
+  ],
+  "devDependencies": {
+    "chai": "3.5.0",
+    "mocha": "2.5.3",
+    "standard": "7.1.2",
+    "pre-push": "0.1.1"
+  },
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "pre-push": [
+    "lint",
+    "test"
+  ]
+}
