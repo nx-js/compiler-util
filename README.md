@@ -13,7 +13,7 @@ $ TODO: add to npm
 
 - Node: 6 and above
 - Chrome: 49 and above (after browserified)
-- Firefox: 18 and above (after browserified)
+- Firefox: 48 and above (after browserified)
 - Edge: 13 and above (after browserified)
 
 ## Usage
@@ -69,7 +69,7 @@ code({name: 'nx-compile', version: '1.0'})
 
 #### difference between global and sandbox variables
 
-Javascript throws a ReferenceError if you try to read undeclared variables. The sandbox is more forgiving. It will read it as undefined instead.
+Javascript throws a ReferenceError if you try to read undeclared variables. The sandbox is more forgiving. It reads it as undefined instead.
 
 ```js
 const compiler = require('nx-compile')
