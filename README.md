@@ -6,7 +6,7 @@ The purpose of this library is to allow the execution of strings as code in a se
 ## Installation
 
 ```
-$ TODO: add to npm
+$ npm install @risingstack/nx-compile
 ```
 
 ## Platform support
@@ -19,7 +19,7 @@ $ TODO: add to npm
 ## Usage
 
 ```js
-const compiler = require('nx-compile')
+const compiler = require('@risingstack/nx-compile')
 ```
 
 ## API
@@ -51,7 +51,7 @@ const result = expression({prop1: 'someValue', prop2: 'someOtherValue'}, ['Local
 ## Example
 
 ```js
-const compiler = require('nx-compile')
+const compiler = require('@risingstack/nx-compile')
 
 const code = compiler.compileCode('console.log(name + version)')
 
@@ -72,7 +72,7 @@ code({name: 'nx-compile', version: '1.0'})
 Javascript throws a ReferenceError if you try to read undeclared variables. The sandbox is more forgiving. It reads it as undefined instead.
 
 ```js
-const compiler = require('nx-compile')
+const compiler = require('@risingstack/nx-compile')
 
 const code = compiler.compileCode('console.log(nonExistentVar)')
 
@@ -90,7 +90,7 @@ code({}, ['console', 'nonExistentVar'])
 The compiled function tries to retrieve the variables first from the sandbox and then from the global object (if exposed by the second parameter).
 
 ```js
-const compiler = require('nx-compile')
+const compiler = require('@risingstack/nx-compile')
 
 global.prop = 'globalValue' // in a browser global would be window
 const sandbox = {prop: 'sandboxValue'}
@@ -119,7 +119,7 @@ You can only expose variables declared on the global object.
 
 ```js
 // this code is assumed to run in a module, so declared variables are not global
-const compiler = require('nx-compile')
+const compiler = require('@risingstack/nx-compile')
 
 const localVariable = 'localValue'
 const code = compiler.compileCode('console.log(localVariable)')
