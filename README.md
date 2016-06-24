@@ -11,10 +11,7 @@ $ npm install @risingstack/nx-compile
 
 ## Platform support
 
-- Node: 6 and above
-- Chrome: 49 and above (after browserified)
-- Firefox: 48 and above (after browserified)
-- Edge: 13 and above (after browserified)
+The latest version of Node, Chorme, Firefox, Opera, Safari and Edge. IE is not supported.
 
 ## Usage
 
