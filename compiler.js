@@ -31,7 +31,7 @@ function compileCode (src) {
     }
 
     if (!sandboxProxies.has(sandbox)) {
-      sandboxProxies.set(sandbox, new Proxy(sandbox, {has, get}))
+      sandboxProxies.set(sandbox, new Proxy(sandbox, {has: has, get: get}))
     }
     currentAllowedGlobals = allowedGlobals
 
