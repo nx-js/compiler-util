@@ -1,6 +1,6 @@
 # nx-compile
 
-This library is part of the **nx framework** (coming soon).
+This library is part of the [NX framework](http://nx-nxframework.rhcloud.com/).
 The purpose of this library is to allow the execution of strings as code in a secure, sandboxed environment.
 
 ## Installation
@@ -134,7 +134,7 @@ code({}, ['console', 'localVariable'])
 
 ## Contributions
 
-This library has the very specific purpose of supporting the nx framework. Features should only be added, if they are used by the framework. Otherwise please fork.
+This library has the very specific purpose of supporting the [NX framework](https://github.com/RisingStack/nx-framework). Features should only be added, if they are used by the framework. Otherwise please fork.
 
 Bug fixes, tests and doc updates are always welcome.
 Tests and linter (standardJS) must pass.
