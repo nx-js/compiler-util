@@ -31,13 +31,14 @@ function compileCode (src) {
     }
 
     if (!sandboxProxies.has(sandbox)) {
-      sandboxProxies.set(sandbox, new Proxy(sandbox, {has: has, get: get}))
+      sandboxProxies.set(sandbox, new Proxy(sandbox, {has, get}))
     }
     currentAllowedGlobals = allowedGlobals
+    const sandboxProxy = sandboxProxies.get(sandbox)
 
     let result
     try {
-      result = code(sandboxProxies.get(sandbox))
+      result = code.call(sandboxProxy, sandboxProxy)
     } finally {
       currentAllowedGlobals = undefined
     }

@@ -132,6 +132,37 @@ const code = compiler.compileCode('console.log(localVariable)')
 code({}, ['console', 'localVariable'])
 ```
 
+#### 'this' inside the sandboxed code
+
+`this` points to the sandbox inside the sandboxed code.
+
+```js
+const compiler = require('@risingstack/nx-compile')
+
+const message = 'local message'
+const code = compiler.compileCode('console.log(this.message)')
+
+// outputs 'sandboxed message' to the console
+code({message: 'sandboxed message'}, ['console'])
+```
+
+#### functions defined inside the sandboxed code
+
+Functions defined inside the sandboxed code are also sandboxed.
+
+```js
+const compiler = require('@risingstack/nx-compile')
+
+const message = 'local message'
+const rawCode = '({}).__proto__.func = function() { return message }'
+const code = compiler.compileCode(rawCode)
+
+code({message: 'sandboxed message'})
+
+// outputs 'sandboxed message' to the console
+console.log(({}).func())
+```
+
 ## Contributions
 
 This library has the very specific purpose of supporting the [NX framework](https://github.com/RisingStack/nx-framework). Features should only be added, if they are used by the framework. Otherwise please fork.

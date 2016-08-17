@@ -9,12 +9,6 @@ const localProp = 1
 
 describe('nx-compile', () => {
   describe('compileCode', () => {
-    it('should execute code in a sandbox', () => {
-      const code = compiler.compileCode('return prop1 + prop2')
-      const value = code({prop1: 1, prop2: 2})
-      expect(value).to.equal(3)
-    })
-
     it('should throw TypeError on invalid source argument', () => {
       expect(() => compiler.compileCode({})).to.throw(TypeError)
       expect(() => compiler.compileCode()).to.throw(TypeError)
@@ -23,12 +17,6 @@ describe('nx-compile', () => {
   })
 
   describe('compileExpression', () => {
-    it('should execute expression in a sandbox', () => {
-      const expression = compiler.compileExpression('prop1 + prop2')
-      const value = expression({prop1: 1, prop2: 2})
-      expect(value).to.equal(3)
-    })
-
     it('should throw TypeError on invalid source argument', () => {
       expect(() => compiler.compileExpression({})).to.throw(TypeError)
       expect(() => compiler.compileExpression()).to.throw(TypeError)
@@ -37,6 +25,31 @@ describe('nx-compile', () => {
   })
 
   describe('returned function (compiled code or expression)', () => {
+    it('should execute in a sandbox', () => {
+      const expression = compiler.compileExpression('prop1 + prop2')
+      const value = expression({prop1: 1, prop2: 2})
+      expect(value).to.equal(3)
+    })
+
+    it('should not expose globals to the sandbox', () => {
+      const expression = compiler.compileExpression('prop1')
+      const value = expression({})
+      expect(value).to.equal(undefined)
+    })
+
+    it('should not expose globals inside functions defined in the passed code', () => {
+      const rawCode = '({}).__proto__.evil = function() { return prop1 + prop2 }'
+      const code = compiler.compileCode(rawCode)
+      code({prop1: 1, prop2: 2})
+      expect(({}).evil()).to.equal(3)
+    })
+
+    it('"this" should be the sandbox instead of the global object', () => {
+      const expression = compiler.compileExpression('this.prop1 + this.prop2')
+      const value = expression({prop1: 1, prop2: 2}, [])
+      expect(value).to.equal(3)
+    })
+
     it('should expose specified globals to the sandbox', () => {
       const expression = compiler.compileExpression('prop1 + prop2')
       const value = expression({}, ['prop1', 'prop2'])
