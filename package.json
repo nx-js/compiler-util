@@ -1,7 +1,7 @@
 {
   "name": "@risingstack/nx-compile",
-  "version": "1.0.2",
-  "description": "Execution of strings as code in a secure, sandboxed environment.",
+  "version": "2.0.0",
+  "description": "Execution of strings as code in a sandboxed environment with optional security.",
   "main": "compiler.js",
   "scripts": {
     "test": "mocha compiler.test.js",

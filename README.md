@@ -1,7 +1,8 @@
 # nx-compile
 
-This library is part of the [NX framework](http://nx-nxframework.rhcloud.com/).
-The purpose of this library is to allow the execution of strings as code in a secure, sandboxed environment.
+This library is part of the [NX framework](http://nx-framework.com/).
+The purpose of this library is to allow the execution of strings as code in the
+context of a sandbox object with optional security restrictions.
 
 ## Installation
 
@@ -27,70 +28,55 @@ const compiler = require('@risingstack/nx-compile')
 
 ## API
 
-### compiler.compileCode(String)
+### compiler.compileCode(String, Object)
 
-This method creates a function out of a string and returns it. The returned function executes the string as code in a sandbox. The string can be any valid javascript code.
+This method creates a function out of a string and returns it. The returned function executes the string as code in the passed sandbox object. The string can be any valid javascript code and it is
+always executed in strict mode.
 
 ```js
 const code = compiler.compileCode('const sum = prop1 + prop2')
 ```
 
-### compiler.compileExpression(String)
+### compiler.compileExpression(String, Object)
 
-This method creates a function out of a string and returns it. The returned function executes the string as an expression in a sandbox and returns the result of this execution. The string can be any javascript code that may follow a return statement.
+This method creates a function out of a string and returns it. The returned function executes the string as an expression in the passed sandbox object and returns the result of this execution. The string can be any javascript code that may follow a return statement and it is always executed in
+strict mode.
 
 ```js
 const expression = compiler.compileExpression('prop1 || prop2')
 ```
 
-### using the returned function, expression(Object, [Array | true])
+### compiler.secure(String, ..., String)
 
-Pass an object as the first argument, this will be the sandbox the function executes in. Optionally you can expose global variables by passing an Array of variable names as second argument. Passing true as the second argument exposes every global variable.
+This methods secures the sandbox and the compiled code. It prevents access to the global scope
+from inside the passed code. You can optionally pass global variable names as strings to expose
+them to the sandbox. Exposed global variables and the prototypes of literals (strings, numbers, etc.)
+are deep frozen with Object.freeze() to prevent security leaks. Deep frozen means that their whole prototype chain and all constructors found on that prototype chain are frozen. Calling secure more than once throws an error.
 
 ```js
-const result = expression({prop1: 'someValue', prop2: 'someOtherValue'}, ['LocalStorage'])
+compiler.secure('console', 'setTimeout')
 ```
+
+This method is experimental, please do not use it in a production environment yet!
 
 ## Example
 
 ```js
 const compiler = require('@risingstack/nx-compile')
+compiler.secure('console')
 
-const code = compiler.compileCode('console.log(name + version)')
+const sandbox = {name: 'nx-compile', version: '1.0'}
+const code = compiler.compileCode('console.log(name + version)', sandbox)
 
 // outputs 'nx-compile1.0' to console
-code({name: 'nx-compile', version: '1.0'}, ['console'])
-
-// outputs 'undefined1.0' to console (name is undefined)
-code({version: '1.0'}, ['console'])
-
-// throws a ReferenceError (console is undefined)
-code({name: 'nx-compile', version: '1.0'})
+code()
 ```
 
 ## Features, limitations and edge cases
 
-#### difference between global and sandbox variables
-
-Javascript throws a ReferenceError if you try to read undeclared variables. The sandbox is more forgiving. It reads it as undefined instead.
-
-```js
-const compiler = require('@risingstack/nx-compile')
-
-const code = compiler.compileCode('console.log(nonExistentVar)')
-
-// tries to retrieve 'nonExistentVar' from the (forgiving) sandbox
-// outputs 'undefined' to the console
-code({}, ['console'])
-
-// tries to retrieve 'nonExistentVar' from the global object
-// throws a ReferenceError
-code({}, ['console', 'nonExistentVar'])
-```
-
 #### lookup order
 
-The compiled function tries to retrieve the variables first from the sandbox and then from the global object (if exposed by the second parameter).
+The compiled function tries to retrieve the variables first from the sandbox and then from the global object.
 
 ```js
 const compiler = require('@risingstack/nx-compile')
@@ -98,22 +84,21 @@ const compiler = require('@risingstack/nx-compile')
 global.prop = 'globalValue' // in a browser global would be window
 const sandbox = {prop: 'sandboxValue'}
 
-const code = compiler.compileCode('console.log(prop)')
+const code = compiler.compileCode('console.log(prop)', sandbox)
 
 // outputs 'sandboxValue' to the console
-code(sandbox, ['console', 'prop'])
+code()
 
-sandbox.prop = undefined
 
 // the key is still present in the sandbox
 // outputs 'undefined' to the console
-code(sandbox, ['console', 'prop'])
-
-delete sandbox.prop
+sandbox.prop = undefined
+code()
 
 // the key is not present in the sandbox
 // outputs 'globalValue' to the console
-code(sandbox, ['console', 'prop'])
+delete sandbox.prop
+code()
 ```
 
 #### local variables can't be exposed
@@ -125,11 +110,11 @@ You can only expose variables declared on the global object.
 const compiler = require('@risingstack/nx-compile')
 
 const localVariable = 'localValue'
-const code = compiler.compileCode('console.log(localVariable)')
+const code = compiler.compileCode('console.log(localVariable)', {})
 
 // tries to retrieve 'localVariable' from the global object
 // throws a ReferenceError
-code({}, ['console', 'localVariable'])
+code()
 ```
 
 #### 'this' inside the sandboxed code
@@ -140,10 +125,11 @@ code({}, ['console', 'localVariable'])
 const compiler = require('@risingstack/nx-compile')
 
 const message = 'local message'
-const code = compiler.compileCode('console.log(this.message)')
+const sandbox = {message: 'sandboxed message'}
+const code = compiler.compileCode('console.log(this.message)', sandbox)
 
 // outputs 'sandboxed message' to the console
-code({message: 'sandboxed message'}, ['console'])
+code()
 ```
 
 #### functions defined inside the sandboxed code
@@ -154,13 +140,43 @@ Functions defined inside the sandboxed code are also sandboxed.
 const compiler = require('@risingstack/nx-compile')
 
 const message = 'local message'
-const rawCode = '({}).__proto__.func = function() { return message }'
-const code = compiler.compileCode(rawCode)
-
-code({message: 'sandboxed message'})
+const sandbox = {message: 'sandboxed message'}
+const code = compiler.compileCode('setTimeout(() => console.log(message))', sandbox)
 
 // outputs 'sandboxed message' to the console
-console.log(({}).func())
+code()
+```
+
+#### globals in secure mode
+
+Unexposed global variable access is prevented in secure mode.
+
+```js
+const compiler = require('@risingstack/nx-compile')
+compiler.secure('console')
+
+const sandbox = {}
+const code = compiler.compileCode('console.log(setTimeout)', sandbox)
+
+// console is exposed, setTimeout is not exposed
+// outputs 'undefined' to the console
+code()
+```
+
+#### frozen objects in secure mode
+
+Exposed globals and literal prototypes are frozen in secure mode.
+
+```js
+const compiler = require('@risingstack/nx-compile')
+compiler.secure('console')
+
+const sandbox = {}
+const rawCode = '({}).constructor.create = function(/* evil stuff */) {}'
+const code = compiler.compileCode(, sandbox)
+
+// throws a TypeError, Object.create() can not be overwritten
+code()
 ```
 
 ## Contributions
