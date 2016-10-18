@@ -1,6 +1,6 @@
 {
   "name": "@risingstack/nx-compile",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Execution of strings as code in a sandboxed environment with optional security.",
   "main": "compiler.js",
   "scripts": {
