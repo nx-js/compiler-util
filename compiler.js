@@ -2,20 +2,17 @@
 
 module.exports = {
   compileCode,
-  compileExpression
+  compileExpression,
+  sandbox
 }
 
 const expressionCache = new Map()
 const codeCache = new Map()
 
-function compileExpression (src, sandbox) {
+function compileExpression (src) {
   if (typeof src !== 'string') {
     throw new TypeError('first argument must be a string')
   }
-  if (typeof sandbox !== 'object') {
-    throw new TypeError('second argument must be an object')
-  }
-  sandbox = new Proxy(sandbox, {has})
   let expression = expressionCache.get(src)
   if (!expression) {
     expression = new Function('sandbox',
@@ -24,23 +21,26 @@ function compileExpression (src, sandbox) {
       }`)
     expressionCache.set(src, expression)
   }
-  return expression.bind(sandbox, sandbox) // eslint-disable-line
+  return expression // eslint-disable-line
 }
 
-function compileCode (src, sandbox) {
+function compileCode (src) {
   if (typeof src !== 'string') {
     throw new TypeError('first argument must be a string')
   }
-  if (typeof sandbox !== 'object') {
-    throw new TypeError('second argument must be an object')
-  }
-  sandbox = new Proxy(sandbox, {has})
   let code = codeCache.get(src)
   if (!code) {
     code = new Function('sandbox', `with (sandbox) { ${src} }`)
     codeCache.set(src, code)
   }
-  return code.bind(sandbox, sandbox) // eslint-disable-line
+  return code // eslint-disable-line
+}
+
+function sandbox (obj) {
+  if (typeof obj !== 'object') {
+    throw new TypeError('first argument must be an object')
+  }
+  return new Proxy(obj, {has})
 }
 
 function has () {
