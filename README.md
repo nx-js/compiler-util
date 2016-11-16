@@ -52,7 +52,7 @@ const expression = compiler.compileExpression('prop1 || prop2')
 const compiler = require('@risingstack/nx-compile')
 
 const sandbox = {name: 'nx-compile', version: '3.0.0'}
-const expression = compiler.compileExpression('name + version)', sandbox)
+const expression = compiler.compileExpression('name + version', sandbox)
 
 // outputs 'nx-compile3.0.0' to console
 console.log(expression())
