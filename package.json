@@ -1,7 +1,7 @@
 {
   "name": "@risingstack/nx-compile",
-  "version": "3.0.0",
-  "description": "Execution of strings as code in a sandboxed environment with optional security.",
+  "version": "4.0.0",
+  "description": "Execution of string as code in the context of an object, similarly to Object.eval().",
   "main": "compiler.js",
   "scripts": {
     "test": "mocha compiler.test.js",
@@ -23,9 +23,10 @@
   "keywords": [
     "nx",
     "compile",
-    "sandbox",
+    "context",
     "eval",
-    "execution"
+    "execution",
+    "code"
   ],
   "devDependencies": {
     "chai": "3.5.0",
