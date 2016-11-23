@@ -40,6 +40,17 @@ const code = compiler.compileCode('return prop1 + prop2')
 const sum = code({prop1: 1, prop2: 2}) // sum is 3
 ```
 
+The returned function also accepts a second object argument, that may contain temporary variables.
+Temporary variables are added to the context object while the code is executing and removed after.
+They are favored over the permanent context variables.
+
+```js
+const code = compiler.compileCode('return prop1 + prop2')
+const context = {prop1: 1, prop2: 2}
+const temporary = {prop1: 2}
+const sum = code(context, temporary) // sum is 4, context is still {prop1: 1, prop2: 2}
+```
+
 ### compiler.compileExpression(String)
 
 This method creates a function out of a string and returns it. The returned function takes

@@ -10,6 +10,7 @@ if (typeof window !== 'undefined') globalObj = window // eslint-disable-line
 else if (typeof global !== 'undefined') globalObj = global // eslint-disable-line
 else if (typeof self !== 'undefined') globalObj = self // eslint-disable-line
 globalObj.$nxCompileToSandbox = toSandbox
+globalObj.$nxCompileCreateBackup = createBackup
 
 const proxies = new WeakMap()
 const expressionCache = new Map()
@@ -22,10 +23,10 @@ function compileExpression (src) {
   }
   let expression = expressionCache.get(src)
   if (!expression) {
-    expression = new Function('sandbox', // eslint-disable-line
-      `sandbox = $nxCompileToSandbox(sandbox)
+    expression = new Function('context', // eslint-disable-line
+      `const sandbox = $nxCompileToSandbox(context)
       try { with (sandbox) { return ${src} } } catch (err) {
-        if (!(err instanceof ReferenceError || err instanceof TypeError)) throw err
+        if (!(err instanceof TypeError)) throw err
       }`)
     expressionCache.set(src, expression)
   }
@@ -38,9 +39,15 @@ function compileCode (src) {
   }
   let code = codeCache.get(src)
   if (!code) {
-    code = new Function('sandbox', // eslint-disable-line
-    `sandbox = $nxCompileToSandbox(sandbox)
-    with (sandbox) { ${src} }`)
+    code = new Function('context, tempVars', // eslint-disable-line
+    `const backup = $nxCompileCreateBackup(context, tempVars)
+    Object.assign(context, tempVars)
+    const sandbox = $nxCompileToSandbox(context)
+    try {
+      with (sandbox) { ${src} }
+    } finally {
+      Object.assign(context, backup)
+    }`)
     codeCache.set(src, code)
   }
   return code
@@ -56,6 +63,16 @@ function toSandbox (obj) {
     proxies.set(obj, sandbox)
   }
   return sandbox
+}
+
+function createBackup (context, tempVars) {
+  if (typeof tempVars === 'object') {
+    const backup = {}
+    for (let key of Object.keys(tempVars)) {
+      backup[key] = context[key]
+    }
+    return backup
+  }
 }
 
 function has () {

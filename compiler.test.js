@@ -60,5 +60,23 @@ describe('nx-compile', () => {
       const code = compiler.compileCode('inner.prop1')
       expect(() => code({})).to.throw(TypeError)
     })
+
+    it('should accept temporary variables', () => {
+      const code = compiler.compileCode('return tempVar')
+      expect(code({}, {tempVar: 'temp'})).to.equal('temp')
+    })
+
+    it('should favour temporary variables over persistent ones', () => {
+      const code = compiler.compileCode('return tempVar')
+      expect(code({tempVar: 'persistent'}, {tempVar: 'temp'})).to.equal('temp')
+    })
+
+    it('should not modify the passed context persistently', () => {
+      const code = compiler.compileCode('return tempVar')
+      const context = {}
+      const result = code(context, {tempVar: 'temp'})
+      expect(result).to.equal('temp')
+      expect(context.tempVar).to.be.undefined
+    })
   })
 })
