@@ -100,18 +100,19 @@ compiler.hide('console', 'Math')
 code({num: 1.8}) // throws an error, console and Math are undefined
 ```
 
-Context variables are always favored over global ones, when both are present (with the same name).
+Context variables are always favored over global ones when both are present (with the same name).
 
 ## Example
 
 ```js
 const compiler = require('@risingstack/nx-compile')
 
-const context = {name: 'nx-compile', version: '4.0.0'}
-const expression = compiler.compileExpression('name + version)', sandbox)
+compiler.expose('console')
+const context = {name: 'nx-compile'}
+const tempVars = {version: '4.2.0'}
+const code = compiler.compileCode('console.log(name + version)')
 
-// outputs 'nx-compile4.0.0' to console
-console.log(expression(context))
+code(context, tempVars) // outputs 'nx-compile4.2.0' to console
 ```
 
 ## Contributions
