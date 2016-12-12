@@ -1,6 +1,6 @@
 {
   "name": "@risingstack/nx-compile",
-  "version": "4.1.0",
+  "version": "4.2.0",
   "description": "Execution of string as code in the context of an object, similarly to Object.eval().",
   "main": "compiler.js",
   "scripts": {
