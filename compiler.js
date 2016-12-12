@@ -2,7 +2,9 @@
 
 module.exports = {
   compileCode,
-  compileExpression
+  compileExpression,
+  expose,
+  hide
 }
 
 let globalObj
@@ -15,6 +17,7 @@ globalObj.$nxCompileCreateBackup = createBackup
 const proxies = new WeakMap()
 const expressionCache = new Map()
 const codeCache = new Map()
+const exposedGlobals = new Set()
 const handlers = {has}
 
 function compileExpression (src) {
@@ -39,7 +42,7 @@ function compileCode (src) {
   }
   let code = codeCache.get(src)
   if (!code) {
-    code = new Function('context, tempVars', // eslint-disable-line
+    code = new Function('context', 'tempVars', // eslint-disable-line
     `const backup = $nxCompileCreateBackup(context, tempVars)
     Object.assign(context, tempVars)
     const sandbox = $nxCompileToSandbox(context)
@@ -51,6 +54,20 @@ function compileCode (src) {
     codeCache.set(src, code)
   }
   return code
+}
+
+function expose (globalName) {
+  if (typeof globalName !== 'string') {
+    throw new TypeError('first argument must be a string')
+  }
+  exposedGlobals.add(globalName)
+}
+
+function hide (globalName) {
+  if (typeof globalName !== 'string') {
+    throw new TypeError('first argument must be a string')
+  }
+  exposedGlobals.delete(globalName)
 }
 
 function toSandbox (obj) {
@@ -75,6 +92,6 @@ function createBackup (context, tempVars) {
   }
 }
 
-function has () {
-  return true
+function has (target, key) {
+  return exposedGlobals.has(key) ? Reflect.has(target, key) : true
 }

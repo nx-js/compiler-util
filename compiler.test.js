@@ -79,4 +79,39 @@ describe('nx-compile', () => {
       expect(context.tempVar).to.be.undefined
     })
   })
+
+  describe('expose', () => {
+    it('should throw a TypeError on non string source argument', () => {
+      expect(() => compiler.expose({})).to.throw(TypeError)
+      expect(() => compiler.expose(undefined)).to.throw(TypeError)
+      expect(() => compiler.expose(12)).to.throw(TypeError)
+    })
+
+    it('should expose the passed global', () => {
+      const expression = compiler.compileExpression('console')
+      expect(expression({})).to.be.undefined
+      compiler.expose('console')
+      expect(expression({})).to.equal(console)
+    })
+
+    it('should favour sandbox props over exposed globals', () => {
+      const expression = compiler.compileExpression('console')
+      expect(expression({ console: 'prop' })).to.equal('prop')
+    })
+  })
+
+  describe('hide', () => {
+    it('should throw a TypeError on non string source argument', () => {
+      expect(() => compiler.hide({})).to.throw(TypeError)
+      expect(() => compiler.hide(undefined)).to.throw(TypeError)
+      expect(() => compiler.hide(12)).to.throw(TypeError)
+    })
+
+    it('should hide exposed globals', () => {
+      const expression = compiler.compileExpression('console')
+      expect(expression({})).to.equal(console)
+      compiler.hide('console')
+      expect(expression({})).to.be.undefined
+    })
+  })
 })
