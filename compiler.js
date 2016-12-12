@@ -56,18 +56,16 @@ function compileCode (src) {
   return code
 }
 
-function expose (globalName) {
-  if (typeof globalName !== 'string') {
-    throw new TypeError('first argument must be a string')
+function expose (...globalNames) {
+  for (let globalName of globalNames) {
+    globals.add(globalName)
   }
-  globals.add(globalName)
 }
 
-function hide (globalName) {
-  if (typeof globalName !== 'string') {
-    throw new TypeError('first argument must be a string')
+function hide (...globalNames) {
+  for (let globalName of globalNames) {
+    globals.delete(globalName)
   }
-  globals.delete(globalName)
 }
 
 function toSandbox (obj) {

@@ -81,16 +81,10 @@ describe('nx-compile', () => {
   })
 
   describe('expose', () => {
-    it('should throw a TypeError on non string source argument', () => {
-      expect(() => compiler.expose({})).to.throw(TypeError)
-      expect(() => compiler.expose(undefined)).to.throw(TypeError)
-      expect(() => compiler.expose(12)).to.throw(TypeError)
-    })
-
     it('should expose the passed global', () => {
       const expression = compiler.compileExpression('console')
       expect(expression({})).to.be.undefined
-      compiler.expose('console')
+      compiler.expose('Math', 'console')
       expect(expression({})).to.equal(console)
     })
 
@@ -101,16 +95,10 @@ describe('nx-compile', () => {
   })
 
   describe('hide', () => {
-    it('should throw a TypeError on non string source argument', () => {
-      expect(() => compiler.hide({})).to.throw(TypeError)
-      expect(() => compiler.hide(undefined)).to.throw(TypeError)
-      expect(() => compiler.hide(12)).to.throw(TypeError)
-    })
-
     it('should hide exposed globals', () => {
       const expression = compiler.compileExpression('console')
       expect(expression({})).to.equal(console)
-      compiler.hide('console')
+      compiler.hide('Math', 'console')
       expect(expression({})).to.be.undefined
     })
   })

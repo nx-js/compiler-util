@@ -76,28 +76,28 @@ context.item = {name: 'item name'}
 result = expression(context) // result is 'item name'
 ```
 
-### compiler.expose(String)
+### compiler.expose(String, String, String, ...)
 
 Use this method to expose globals to the compiler. Non of the globals are exposed by default.
 
 ```js
-const code = compiler.compileCode('console.log(message)')
-compiler.expose('console')
-code({message: 'Hello World'}) // logs 'Hello World' to the console
+const code = compiler.compileCode('console.log(Math.round(num))')
+compiler.expose('console', 'Math')
+code({num: 1.8}) // logs 2 to the console
 ```
 
 Context variables are always favored over global ones, when both are present (with the same name).
 
-### compiler.hide(String)
+### compiler.hide(String, String, String, ...)
 
 Use this method to hide exposed globals from the compiler.
 
 ```js
-const code = compiler.compileCode('console.log(message)')
-compiler.expose('console')
-code({message: 'Hello World'}) // logs 'Hello World' to the console
-compiler.hide('console')
-code({message: 'Hello World'}) // throws an error, console is undefined
+const code = compiler.compileCode('console.log(Math.round(num))')
+compiler.expose('console', 'Math')
+code({num: 1.8}) // logs 2 to the console
+compiler.hide('console', 'Math')
+code({num: 1.8}) // throws an error, console and Math are undefined
 ```
 
 Context variables are always favored over global ones, when both are present (with the same name).
