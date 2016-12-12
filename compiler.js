@@ -17,7 +17,7 @@ globalObj.$nxCompileCreateBackup = createBackup
 const proxies = new WeakMap()
 const expressionCache = new Map()
 const codeCache = new Map()
-const exposedGlobals = new Set()
+const globals = new Set()
 const handlers = {has}
 
 function compileExpression (src) {
@@ -60,14 +60,14 @@ function expose (globalName) {
   if (typeof globalName !== 'string') {
     throw new TypeError('first argument must be a string')
   }
-  exposedGlobals.add(globalName)
+  globals.add(globalName)
 }
 
 function hide (globalName) {
   if (typeof globalName !== 'string') {
     throw new TypeError('first argument must be a string')
   }
-  exposedGlobals.delete(globalName)
+  globals.delete(globalName)
 }
 
 function toSandbox (obj) {
@@ -93,5 +93,5 @@ function createBackup (context, tempVars) {
 }
 
 function has (target, key) {
-  return exposedGlobals.has(key) ? Reflect.has(target, key) : true
+  return globals.has(key) ? Reflect.has(target, key) : true
 }
