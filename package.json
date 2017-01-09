@@ -1,11 +1,11 @@
 {
-  "name": "@risingstack/nx-compile",
-  "version": "4.2.0",
-  "description": "Execution of string as code in the context of an object, similarly to Object.eval().",
-  "main": "compiler.js",
+  "name": "@nx-js/compiler-util",
+  "version": "1.0.0",
+  "description": "An NX util, responsible for executing code in the context of an object.",
+  "main": "index.js",
   "scripts": {
-    "test": "mocha compiler.test.js",
-    "lint": "standard compiler.js"
+    "test": "mocha test",
+    "lint": "standard"
   },
   "author": {
     "name": "Miklos Bertalan",
@@ -13,20 +13,21 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:RisingStack/nx-compile.git"
+    "url": "git@github.com:nx-js/compiler-util.git"
   },
   "bugs": {
-    "url": "https://github.com/RisingStack/nx-compile/issues"
+    "url": "https://github.com/nx-js/compiler-util/issues"
   },
-  "homepage": "https://github.com/RisingStack/nx-compile#readme",
+  "homepage": "https://github.com/nx-js/compiler-util#readme",
   "license": "MIT",
   "keywords": [
     "nx",
+    "util",
     "compile",
     "context",
     "eval",
-    "execution",
-    "code"
+    "code",
+    "expression"
   ],
   "devDependencies": {
     "chai": "3.5.0",
@@ -36,6 +37,11 @@
   },
   "engines": {
     "node": ">=6.0.0"
+  },
+  "standard": {
+    "ignore": [
+      "test"
+    ]
   },
   "pre-push": [
     "lint",

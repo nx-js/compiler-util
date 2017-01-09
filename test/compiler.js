@@ -1,12 +1,12 @@
 'use strict'
 
 const expect = require('chai').expect
-const compiler = require('./compiler')
+const compiler = require('../index')
 
 const localProp = 'localProp'
 global.globalProp = 'globalProp'
 
-describe('nx-compile', () => {
+describe('compiler', () => {
   describe('compileCode()', () => {
     it('should throw a TypeError on non string source argument', () => {
       expect(() => compiler.compileCode({})).to.throw(TypeError)
@@ -77,29 +77,6 @@ describe('nx-compile', () => {
       const result = code(context, {tempVar: 'temp'})
       expect(result).to.equal('temp')
       expect(context.tempVar).to.be.undefined
-    })
-  })
-
-  describe('expose', () => {
-    it('should expose the passed global', () => {
-      const expression = compiler.compileExpression('console')
-      expect(expression({})).to.be.undefined
-      compiler.expose('Math', 'console')
-      expect(expression({})).to.equal(console)
-    })
-
-    it('should favour sandbox props over exposed globals', () => {
-      const expression = compiler.compileExpression('console')
-      expect(expression({ console: 'prop' })).to.equal('prop')
-    })
-  })
-
-  describe('hide', () => {
-    it('should hide exposed globals', () => {
-      const expression = compiler.compileExpression('console')
-      expect(expression({})).to.equal(console)
-      compiler.hide('Math', 'console')
-      expect(expression({})).to.be.undefined
     })
   })
 })
