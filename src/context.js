@@ -42,7 +42,7 @@ function has (target, key) {
 
 function toSandbox (obj) {
   if (typeof obj !== 'object') {
-    throw new TypeError('first argument must be an object')
+    throw new TypeError(`First argument must be an object, instead it is a ${typeof obj}.`)
   }
   let sandbox = proxies.get(obj)
   if (!sandbox) {
