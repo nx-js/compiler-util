@@ -1,16 +1,7 @@
-'use strict'
+export const filters = new Map()
+export const limiters = new Map()
 
-const filters = new Map()
-const limiters = new Map()
-
-module.exports = {
-  filters,
-  limiters,
-  filter,
-  limiter
-}
-
-function filter (name, handler) {
+export function filter (name, handler) {
   if (typeof name !== 'string') {
     throw new TypeError('First argument must be a string.')
   }
@@ -24,7 +15,7 @@ function filter (name, handler) {
   return this
 }
 
-function limiter (name, handler) {
+export function limiter (name, handler) {
   if (typeof name !== 'string') {
     throw new TypeError('First argument must be a string.')
   }

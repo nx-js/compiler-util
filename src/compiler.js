@@ -1,22 +1,15 @@
-'use strict'
-
-const parser = require('./parser')
+import { parseExpression, parseCode } from './parser'
 
 const expressionCache = new Map()
 const codeCache = new Map()
 
-module.exports = {
-  compileExpression,
-  compileCode
-}
-
-function compileExpression (src) {
+export function compileExpression (src) {
   if (typeof src !== 'string') {
     throw new TypeError('First argument must be a string.')
   }
   let expression = expressionCache.get(src)
   if (!expression) {
-    expression = parser.parseExpression(src)
+    expression = parseExpression(src)
     expressionCache.set(src, expression)
   }
 
@@ -34,13 +27,13 @@ function compileExpression (src) {
   }
 }
 
-function compileCode (src) {
+export function compileCode (src) {
   if (typeof src !== 'string') {
     throw new TypeError('First argument must be a string.')
   }
   let code = codeCache.get(src)
   if (!code) {
-    code = parser.parseCode(src)
+    code = parseCode(src)
     codeCache.set(src, code)
   }
 

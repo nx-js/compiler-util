@@ -1,7 +1,7 @@
 'use strict'
 
 const expect = require('chai').expect
-const compiler = require('../index')
+const compiler = require('../dist/compiler')
 
 const localProp = 'localProp'
 global.globalProp = 'globalProp'

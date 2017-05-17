@@ -1,7 +1,7 @@
 'use strict'
 
 const expect = require('chai').expect
-const compiler = require('../index')
+const compiler = require('../dist/compiler')
 
 describe('context', () => {
   afterEach(() => compiler.hideAll())

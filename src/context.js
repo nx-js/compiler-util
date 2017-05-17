@@ -1,5 +1,3 @@
-'use strict'
-
 const hasHandler = { has }
 const allHandlers = { has, get }
 const globals = new Set()
@@ -12,27 +10,21 @@ else if (typeof self !== 'undefined') globalObj = self // eslint-disable-line
 globalObj.$nxCompileToSandbox = toSandbox
 globalObj.$nxClearSandbox = clearSandbox
 
-module.exports = {
-  expose,
-  hide,
-  hideAll
-}
-
-function expose (...globalNames) {
+export function expose (...globalNames) {
   for (let globalName of globalNames) {
     globals.add(globalName)
   }
   return this
 }
 
-function hide (...globalNames) {
+export function hide (...globalNames) {
   for (let globalName of globalNames) {
     globals.delete(globalName)
   }
   return this
 }
 
-function hideAll () {
+export function hideAll () {
   globals.clear()
   return this
 }

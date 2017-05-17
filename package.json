@@ -2,10 +2,12 @@
   "name": "@nx-js/compiler-util",
   "version": "1.0.0",
   "description": "An NX util, responsible for executing code in the context of an object.",
-  "main": "index.js",
+  "main": "dist/compiler.js",
+  "module": "src/index.js",
   "scripts": {
-    "test": "mocha test",
-    "lint": "standard"
+    "build": "rollup src/index.js -f cjs -o dist/compiler.js",
+    "test": "npm run build && mocha test",
+    "lint": "standard src/* test/*"
   },
   "author": {
     "name": "Miklos Bertalan",
@@ -32,8 +34,9 @@
   "devDependencies": {
     "chai": "3.5.0",
     "mocha": "2.5.3",
-    "standard": "7.1.2",
-    "pre-push": "0.1.1"
+    "pre-push": "0.1.1",
+    "rollup": "^0.41.6",
+    "standard": "7.1.2"
   },
   "engines": {
     "node": ">=6.0.0"

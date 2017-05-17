@@ -1,11 +1,4 @@
-'use strict'
-
-module.exports = {
-  compileCode,
-  compileExpression
-}
-
-function compileExpression (src) {
+export function compileRawExpression (src) {
   return new Function('context', 'tempVars', // eslint-disable-line
     `const sandbox = $nxCompileToSandbox(context, tempVars)
     try { with (sandbox) { return ${src} } } catch (err) {
@@ -14,7 +7,7 @@ function compileExpression (src) {
     $nxClearSandbox()`)
 }
 
-function compileCode (src) {
+export function compileRawCode (src) {
   return new Function('context', 'tempVars', // eslint-disable-line
     `const sandbox = $nxCompileToSandbox(context, tempVars)
     with (sandbox) { ${src} }
