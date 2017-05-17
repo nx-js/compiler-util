@@ -1,9 +1,9 @@
 'use strict'
 
+const hasHandler = { has }
+const allHandlers = { has, get }
 const globals = new Set()
-const proxies = new WeakMap()
-const tempVarStore = new WeakMap()
-const handlers = {has, get}
+let temp
 
 let globalObj
 if (typeof window !== 'undefined') globalObj = window // eslint-disable-line
@@ -38,27 +38,21 @@ function hideAll () {
 }
 
 function has (target, key) {
-  return globals.has(key) ? Reflect.has(target, key) : true
+  return globals.has(key) ? (key in target) : true
 }
 
-function get (target, key, receiver) {
-  const tempVars = tempVarStore.get(target)
-  if (tempVars && (key in tempVars)) {
-    return tempVars[key]
-  }
-  return Reflect.get(target, key, receiver)
+function get (target, key) {
+  return key in temp ? temp[key] : target[key]
 }
 
 function toSandbox (obj, tempVars) {
-  tempVarStore.set(obj, tempVars)
-  let sandbox = proxies.get(obj)
-  if (!sandbox) {
-    sandbox = new Proxy(obj, handlers)
-    proxies.set(obj, sandbox)
+  if (tempVars) {
+    temp = tempVars
+    return new Proxy(obj, allHandlers)
   }
-  return sandbox
+  return new Proxy(obj, hasHandler)
 }
 
-function clearSandbox (obj) {
-  tempVarStore.delete(obj)
+function clearSandbox () {
+  temp = undefined
 }
