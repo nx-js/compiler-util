@@ -2,14 +2,15 @@
 
 const globals = new Set()
 const proxies = new WeakMap()
-const handlers = {has}
+const tempVarStore = new WeakMap()
+const handlers = {has, get}
 
 let globalObj
 if (typeof window !== 'undefined') globalObj = window // eslint-disable-line
 else if (typeof global !== 'undefined') globalObj = global // eslint-disable-line
 else if (typeof self !== 'undefined') globalObj = self // eslint-disable-line
 globalObj.$nxCompileToSandbox = toSandbox
-globalObj.$nxCompileCreateBackup = createBackup
+globalObj.$nxClearSandbox = clearSandbox
 
 module.exports = {
   expose,
@@ -40,10 +41,16 @@ function has (target, key) {
   return globals.has(key) ? Reflect.has(target, key) : true
 }
 
-function toSandbox (obj) {
-  if (typeof obj !== 'object') {
-    throw new TypeError(`First argument must be an object, instead it is a ${typeof obj}.`)
+function get (target, key, receiver) {
+  const tempVars = tempVarStore.get(target)
+  if (tempVars && (key in tempVars)) {
+    return tempVars[key]
   }
+  return Reflect.get(target, key, receiver)
+}
+
+function toSandbox (obj, tempVars) {
+  tempVarStore.set(obj, tempVars)
   let sandbox = proxies.get(obj)
   if (!sandbox) {
     sandbox = new Proxy(obj, handlers)
@@ -52,12 +59,6 @@ function toSandbox (obj) {
   return sandbox
 }
 
-function createBackup (context, tempVars) {
-  if (typeof tempVars === 'object') {
-    const backup = {}
-    for (let key of Object.keys(tempVars)) {
-      backup[key] = context[key]
-    }
-    return backup
-  }
+function clearSandbox (obj) {
+  tempVarStore.delete(obj)
 }

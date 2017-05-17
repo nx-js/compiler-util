@@ -5,14 +5,12 @@ const modifiers = require('./src/modifiers')
 const compiler = require('./src/compiler')
 const rawCompiler = require('./src/rawCompiler')
 
-module.exports = {
-  compileExpression: compiler.compileExpression,
-  compileCode: compiler.compileCode,
-  compileRawExpression: rawCompiler.compileExpression,
-  compileRawCode: rawCompiler.compileCode,
-  expose: context.expose,
-  hide: context.hide,
-  hideAll: context.hideAll,
-  filter: modifiers.filter,
-  limiter: modifiers.limiter
-}
+exports.compileExpression = compiler.compileExpression
+exports.compileCode = compiler.compileCode
+exports.compileRawExpression = rawCompiler.compileExpression
+exports.compileRawCode = rawCompiler.compileCode
+exports.expose = context.expose
+exports.hide = context.hide
+exports.hideAll = context.hideAll
+exports.filter = modifiers.filter
+exports.limiter = modifiers.limiter

@@ -6,21 +6,17 @@ module.exports = {
 }
 
 function compileExpression (src) {
-  return new Function('context', // eslint-disable-line
-    `const sandbox = $nxCompileToSandbox(context)
+  return new Function('context', 'tempVars', // eslint-disable-line
+    `const sandbox = $nxCompileToSandbox(context, tempVars)
     try { with (sandbox) { return ${src} } } catch (err) {
       if (!(err instanceof TypeError)) throw err
-    }`)
+    }
+    $nxClearSandbox(context)`)
 }
 
 function compileCode (src) {
   return new Function('context', 'tempVars', // eslint-disable-line
-    `const backup = $nxCompileCreateBackup(context, tempVars)
-    Object.assign(context, tempVars)
-    const sandbox = $nxCompileToSandbox(context)
-    try {
-      with (sandbox) { ${src} }
-    } finally {
-      Object.assign(context, backup)
-    }`)
+    `const sandbox = $nxCompileToSandbox(context, tempVars)
+    with (sandbox) { ${src} }
+    $nxClearSandbox(context)`)
 }

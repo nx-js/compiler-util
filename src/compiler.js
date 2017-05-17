@@ -24,8 +24,8 @@ function compileExpression (src) {
     return expression
   }
 
-  return function evaluateExpression (context) {
-    let value = expression.exec(context)
+  return function evaluateExpression (context, tempVars) {
+    let value = expression.exec(context, tempVars)
     for (let filter of expression.filters) {
       const args = filter.argExpressions.map(evaluateArgExpression, context)
       value = filter.effect(value, ...args)
