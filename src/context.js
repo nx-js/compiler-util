@@ -9,6 +9,7 @@ else if (typeof global !== 'undefined') globalObj = global // eslint-disable-lin
 else if (typeof self !== 'undefined') globalObj = self // eslint-disable-line
 globalObj.$nxCompileToSandbox = toSandbox
 globalObj.$nxClearSandbox = clearSandbox
+globalObj.$nxGlobals = globals
 
 export function expose (...globalNames) {
   for (let globalName of globalNames) {

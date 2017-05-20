@@ -6,7 +6,7 @@
   "module": "src/index.js",
   "scripts": {
     "build": "rollup src/index.js -f cjs -o dist/compiler.js",
-    "test": "npm run build && mocha test",
+    "test": "nyc --reporter=lcov --reporter=text mocha test",
     "lint": "standard src/* test/*"
   },
   "author": {
@@ -34,7 +34,9 @@
   "devDependencies": {
     "chai": "3.5.0",
     "mocha": "2.5.3",
+    "nyc": "^10.3.2",
     "pre-push": "0.1.1",
+    "reify": "^0.11.0",
     "rollup": "^0.41.6",
     "standard": "7.1.2"
   },
@@ -48,6 +50,7 @@
   },
   "pre-push": [
     "lint",
-    "test"
+    "test",
+    "build"
   ]
 }
