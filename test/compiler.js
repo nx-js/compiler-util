@@ -19,9 +19,9 @@ describe('compiler', () => {
 
   describe('compileExpression()', () => {
     it('should throw a TypeError on non string source argument', () => {
-      expect(() => compiler.compileCode({})).to.throw(TypeError)
-      expect(() => compiler.compileCode(undefined)).to.throw(TypeError)
-      expect(() => compiler.compileCode(12)).to.throw(TypeError)
+      expect(() => compiler.compileExpression({})).to.throw(TypeError)
+      expect(() => compiler.compileExpression(undefined)).to.throw(TypeError)
+      expect(() => compiler.compileExpression(12)).to.throw(TypeError)
     })
   })
 

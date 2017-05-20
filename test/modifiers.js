@@ -36,6 +36,10 @@ describe('context', () => {
       const expression = compiler.compileExpression('message | slice 1 4 | capitalize')
       expect(expression({message: 'hello'})).to.equal('ELL')
     })
+
+    it('should throw an error on using unregistered filters', () => {
+      expect(() => compiler.compileExpression('message | unregisteredFilter')).to.throw(Error)
+    })
   })
 
   describe('limiter', () => {
@@ -133,5 +137,9 @@ describe('context', () => {
       increment2(context)
       expect(context.counter).to.equal(2)
     })
+  })
+
+  it('should throw an error on using unregistered limiters', () => {
+    expect(() => compiler.compileCode('return message & unregisteredLimiter')).to.throw(Error)
   })
 })

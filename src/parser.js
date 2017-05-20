@@ -16,7 +16,7 @@ export function parseExpression (src) {
     filters: []
   }
   for (let i = 1; i < tokens.length; i++) {
-    let filterTokens = tokens[i].match(argsRegex) || []
+    let filterTokens = tokens[i].match(argsRegex)
     const filterName = filterTokens.shift()
     const effect = filters.get(filterName)
     if (!effect) {
@@ -38,7 +38,7 @@ export function parseCode (src) {
     limiters: []
   }
   for (let i = 1; i < tokens.length; i++) {
-    const limiterTokens = tokens[i].match(argsRegex) || []
+    const limiterTokens = tokens[i].match(argsRegex)
     const limiterName = limiterTokens.shift()
     const effect = limiters.get(limiterName)
     if (!effect) {
