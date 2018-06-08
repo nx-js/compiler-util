@@ -1,6 +1,6 @@
 {
   "name": "@nx-js/compiler-util",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "An NX util, responsible for executing code in the context of an object.",
   "main": "dist/cjs.es5.js",
   "module": "dist/es.es5.js",
