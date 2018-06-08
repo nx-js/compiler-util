@@ -1,0 +1,11 @@
+{
+  "env": {
+    "development": {
+      "presets": ["es2016", "es2017", "stage-0"]
+    },
+    "test": {
+      "presets": ["es2016", "es2017", "stage-0"],
+      "plugins": ["transform-es2015-modules-commonjs"]
+    }
+  }
+}

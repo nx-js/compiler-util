@@ -14,19 +14,16 @@ export function expose (...globalNames) {
   for (let globalName of globalNames) {
     globals.add(globalName)
   }
-  return this
 }
 
 export function hide (...globalNames) {
   for (let globalName of globalNames) {
     globals.delete(globalName)
   }
-  return this
 }
 
 export function hideAll () {
   globals.clear()
-  return this
 }
 
 function has (target, key) {

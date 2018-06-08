@@ -1,12 +1,8 @@
-'use strict'
-
-require('reify')
-
-const expect = require('chai').expect
-const compiler = require('../src/index')
+import { expect } from 'chai'
+import * as compiler from '@nx-js/compiler-util'
 
 const localProp = 'localProp'
-global.globalProp = 'globalProp'
+window.globalProp = 'globalProp'
 
 describe('compiler', () => {
   describe('compileCode()', () => {

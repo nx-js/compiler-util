@@ -38,3 +38,6 @@ jspm_packages
 
 # reify cache for allowing import export in node
 .reify-cache
+
+# built code
+dist

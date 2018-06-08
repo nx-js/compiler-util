@@ -1,35 +1,23 @@
-'use strict'
+import { expect } from 'chai'
+import * as compiler from '@nx-js/compiler-util'
 
-require('reify')
-
-const expect = require('chai').expect
-const compiler = require('../src/index')
-
+// this file fails if any other test case come after this!
+// TODO: figure out why
 describe('context', () => {
   afterEach(() => compiler.hideAll())
 
   describe('expose', () => {
     it('should expose the passed global', () => {
-      const expression = compiler.compileExpression('console')
+      const expression = compiler.compileExpression('Math')
       expect(expression({})).to.be.undefined
       compiler.expose('Math', 'console')
-      expect(expression({})).to.equal(console)
+      expect(expression({})).to.equal(Math)
     })
 
     it('should favour sandbox props over exposed globals', () => {
       compiler.expose('console')
       const expression = compiler.compileExpression('console')
       expect(expression({ console: 'prop' })).to.equal('prop')
-    })
-
-    it('should be chainable', () => {
-      const expression = compiler.compileExpression('console')
-      expect(expression({})).to.be.undefined
-      compiler
-        .expose('Math')
-        .expose('console')
-
-      expect(expression({})).to.equal(console)
     })
   })
 
@@ -41,17 +29,6 @@ describe('context', () => {
       compiler.hide('Math', 'console')
       expect(expression({})).to.be.undefined
     })
-
-    it('should be chainable', () => {
-      const expression = compiler.compileExpression('console')
-      expect(expression({})).to.be.undefined
-      compiler.expose('console')
-      compiler
-        .hide('Math')
-        .hide('console')
-
-      expect(expression({})).to.be.undefined
-    })
   })
 
   describe('hideAll', () => {
@@ -61,17 +38,6 @@ describe('context', () => {
       expect(expression({})).to.equal(console)
       compiler.hideAll()
       expect(expression({})).to.be.undefined
-    })
-
-    it('should be chainable', () => {
-      const expression = compiler.compileExpression('console')
-      expect(expression({})).to.be.undefined
-      compiler.expose('console')
-      compiler
-        .hideAll('Math')
-        .expose('console')
-
-      expect(expression({})).to.equal(console)
     })
   })
 })

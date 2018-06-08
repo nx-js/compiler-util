@@ -180,6 +180,17 @@ compiler.hide('console', 'Math')
 code({num: 1.8}) // throws an error, console and Math are undefined
 ```
 
+## Alternative builds
+
+This library detects if you use ES or commonJS modules and serve the right format to you. The exposed bundles are transpiled to ES5 to support common tools - like UglifyJS. If you would like a finer control over the provided build, you can specify them in your imports.
+
+* `@nx-js/compiler-util/dist/es.es6.js` exposes an ES6 build with ES modules.
+* `@nx-js/compiler-util/dist/es.es5.js` exposes an ES5 build with ES modules.
+* `@nx-js/compiler-util/dist/cjs.es6.js` exposes an ES6 build with commonJS modules.
+* `@nx-js/compiler-util/dist/cjs.es5.js` exposes an ES5 build with commonJS modules.
+
+If you use a bundler, set up an alias for `@nx-js/compiler-util` to point to your desired build. You can learn how to do it with webpack [here](https://webpack.js.org/configuration/resolve/#resolve-alias) and with rollup [here](https://github.com/rollup/rollup-plugin-alias#usage).
+
 ## Contributions
 
 This library has the very specific purpose of supporting the

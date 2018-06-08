@@ -1,13 +1,7 @@
-'use strict'
+import { expect } from 'chai'
+import * as compiler from '@nx-js/compiler-util'
 
-require('reify')
-
-const expect = require('chai').expect
-const compiler = require('../src/index')
-
-describe('context', () => {
-  afterEach(() => compiler.hideAll())
-
+describe('modifiers', () => {
   describe('filter', () => {
     it('should throw a TypeError on invalid arguments', () => {
       expect(() => compiler.filter(12, () => {})).to.throw(TypeError)
